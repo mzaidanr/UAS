@@ -9,8 +9,6 @@ dfJ = jh_.dataFrame
 ch_ = csvHandler('produksi_minyak_mentah.csv')
 dfC = ch_.dataFrame
 
-#Judul 
-
 #Bagian A
 name_negara = dfJ['name'].tolist()
 negara = st.sidebar.selectbox('Pilih Negara : ', name_negara)
@@ -22,6 +20,8 @@ produksi = dfC[dfC['kode_negara']==N]['produksi'].tolist()
 dic = {'tahun':tahun,'produksi':produksi}
 df_ = pd.DataFrame(dic)
 dfJ['alpha-3'][243]
+
+st.write('Grafik Produksi Minyak Negara', negara)
 
 plt.title('Produksi Tahunan Negara {}'.format(negara))
 plt.plot(tahun,produksi,label='Nilai Produksi')
@@ -64,7 +64,25 @@ plt.show()
 
 #Bagian C
 
+st.write('Grafik Negara dengan Produksi Kumulatif Terbesar')
+list_a = []
+kumulatif = []
 
+for i in list (dfC['kode_negara']) :
+    if i not in list_a:
+        list_a.append(i)
+        
+for i in list_a :
+    a=dfC.loc[dfC['kode_negara'] ==i,'produksi'].sum()
+    kumulatif.append(a)
+    
+dk = pd.DataFrame(list(zip(list_a,kumulatif)), columns = ['kode_negara','kumulatif'])
+dk = dk.sort_values(by=['kumulatif'], ascending = False)
+dk = dk[:B]
+
+dk.plot.bar(x='kode_negara', y='kumulatif') 
+plt.show()
+st.pyplot(plt)
 
 #Bagian D
 
