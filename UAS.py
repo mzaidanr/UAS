@@ -94,7 +94,7 @@ plt.show()
 st.pyplot(plt)
 
 #Bagian D
-
+'''
 T = st.sidebar.number_input("Pilih Tahun produksi", min_value=1971, max_value=2015)
 
 tahun = list(dict.fromkeys(dfC['tahun'].tolist()))
@@ -155,3 +155,5 @@ for t in tahun:
 df_maks = pd.DataFrame(dic_maks)
 df_min = pd.DataFrame(dic_min)
 df_zero = pd.DataFrame(dic_zero)
+'''
+
