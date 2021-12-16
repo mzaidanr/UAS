@@ -1,325 +1,130 @@
-'''
-Created on Dec 8, 2021
-@author: adamz
-'''
-
-import json
-import urllib
-
-import numpy as np
 import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
+import matplotlib.pyplot as plt
+import numpy as np
 import streamlit as st
+from fileHandler import csvHandler,jsonHandler
 
-list_kodenegarahuruf = []
-list_organisasi = []
-list_nama = []
-list_kodenegaraangka = []
-list_region = []
-list_subregion = []
+jh_ = jsonHandler('kode_negara_lengkap.json')
+dfJ = jh_.dataFrame
+ch_ = csvHandler('produksi_minyak_mentah.csv')
+dfC = ch_.dataFrame
 
-url = "kode_negara_lengkap.json"
-file_json = json.loads(url)
-df_csv = pd.read_csv("produksi_minyak_mentah.csv")
-df_json = pd.DataFrame.from_dict(file_json, orient='columns')
+#Judul 
 
-# Membuat list kode negara dari df_csv
-for i in list(df_csv['kode_negara']):
-    if i not in list_kodenegarahuruf:
-        list_kodenegarahuruf.append(i)
+#Bagian A
+name_negara = dfJ['name'].tolist()
+negara = st.sidebar.selectbox('Pilih Negara : ', name_negara)
+kode_negara = dfJ[dfJ['name']==negara]['alpha-3'].tolist()[0] 
+N = kode_negara
+tahun = dfC[dfC['kode_negara']==N]['tahun'].tolist()
+produksi = dfC[dfC['kode_negara']==N]['produksi'].tolist()
 
-# Mencari organisasi/kumpulan negara pada list_kodenegarahuruf
-for i in list_kodenegarahuruf:
-    if i not in list(df_json['alpha-3']):
-        list_organisasi.append(i)
+dic = {'tahun':tahun,'produksi':produksi}
+df_ = pd.DataFrame(dic)
+dfJ['alpha-3'][243]
 
-# Menghilangkan organisasi/kumpulan negara dari df_csv
-for i in list_organisasi:
-    df_csv = df_csv[df_csv.kode_negara != i]
-    if i in list_kodenegarahuruf:
-        list_kodenegarahuruf.remove(i)
+plt.title('Produksi Tahunan Negara {}'.format(negara))
+plt.plot(tahun,produksi,label='Nilai Produksi')
+plt.xlabel('Tahun')
+plt.ylabel('Produksi')
+plt.legend()
 
-# Membuat beberapa list yang berisi informasi tentang nama negara, kode
-# negara angka, region, dan sub-region dari tiap negara pada df_csv
-for i in range(len(list_kodenegarahuruf)):
-    for j in range(len(list(df_json['alpha-3']))):
-        if list(df_json['alpha-3'])[j] == list_kodenegarahuruf[i] and list(df_json['name'])[j] not in list_nama:
-            list_nama.append(list(df_json['name'])[j])
-            list_kodenegaraangka.append(list(df_json['country-code'])[j])
-            list_region.append(list(df_json['region'])[j])
-            list_subregion.append(list(df_json['sub-region'])[j])
+#Bagian B
+T = st.sidebar.number_input("Pilih Tahun produksi", min_value=1971, max_value=2015)
+B = st.sidebar.number_input("Pilih Banyak Negara", min_value=1, max_value=None, value=3)
 
-# Membuat dataframe dari list yang berisi informasi tiap negara pada df_csv
-df_negara = pd.DataFrame(list(zip(list_nama, list_kodenegarahuruf, list_kodenegaraangka, list_region, list_subregion)), columns=[
-                         'Negara', 'alpha-3', 'Kode_Negara', 'Region', 'Sub-Region'])
+dfC = dfC[dfC['tahun']==T]
+kode_negara = dfC[dfC['tahun']==T]['kode_negara'].tolist()
+produksi = dfC[dfC['tahun']==T]['produksi'].tolist()
 
-# Konfigurasi page pada streamlit
-st.set_page_config(page_title='Produksi Minyak Negara',
-                   layout='wide', page_icon=':oil_drum:')
-'''
-# Header streamlit
-t1, t2 = st.columns((0.07, 1))
-t1.image('https://raw.githubusercontent.com/adamzainuri01/StreamlitProduksiMinyakNegara/main/images/logo_itb_1024.png', width=120)
-title = '<p style="font-family: sans-serif; font-size: 40px; text-align: center;"><b>Analisis Data Produksi Minyak Mentah dari Berbagai Negara</b></p>'
-t2.markdown(title, unsafe_allow_html=True)
-'''
+maks_produksi = []
+negara_tiaptahun = []
 
-# Option pada streamlit untuk memilih negara dari daftar negara
-title1 = '<p style="color:#fe8062; font-size: 30px;">Grafik Jumlah Produksi Minyak Terhadap Waktu dari Suatu Negara</p>'
-st.markdown(title1, unsafe_allow_html=True)
-N = st.selectbox("Daftar Negara", list_nama)
+kode_negara = list(dict.fromkeys(kode_negara))
+for kode in kode_negara:
+    try:
+        produksi = dfC[dfC['kode_negara']==kode]['produksi'].tolist()
+        negara = dfJ[dfJ['alpha-3']==kode]['name'].tolist()[0]
+        maks_produksi.append(max(produksi))
+        negara_tiaptahun.append(negara)
+    except:
+        continue
+        
+dic = {'negara':negara_tiaptahun,'produksi_maks':maks_produksi}
+df__ = pd.DataFrame(dic)
+df__ = df__.sort_values('produksi_maks',ascending=False).reset_index()
 
-for i in range(len(list_nama)):
-    if list_nama[i] == N:
-        kodenegarahuruf = list_kodenegarahuruf[i]
-        kodenegaraangka = list_kodenegaraangka[i]
-        region = list_region[i]
-        subregion = list_subregion[i]
+plt.title('{B} Negara dengan Produksi Terbesar pada Tahun {T}'.format(B=B,T=T))
+plt.bar(df__['negara'][:B],df__['produksi_maks'][:B],width=0.5, bottom=None, align="center",
+            color="lightblue", edgecolor="aquamarine", data=None, zorder=3)
+plt.grid(True, color="blue", linewidth="0.7", linestyle="-.", zorder=0)
+plt.xlabel('Negara')
+plt.ylabel('Banyaknya Produksi')
+plt.show()
 
-# Membuat list baru untuk menampung data produksi negara dan tahunnya
-list_produksi = []
-list_tahun = []
+#Bagian C
 
-# Mengambil data produksi dan tahun berdasarkan negara yang dipilih pada
-# option dan memasukkannya ke list yang telah dibuat
-for i in range(len(list(df_csv['kode_negara']))):
-    if kodenegarahuruf == list(df_csv['kode_negara'])[i]:
-        list_produksi.append(list(df_csv['produksi'])[i])
-        list_tahun.append(list(df_csv['tahun'])[i])
 
-# Membuat grafik garis dengan x dari list_tahun dan y dari list_produksi
-fig = px.line(x=list_tahun, y=list_produksi, labels={
-              "x": "tahun", "y": "produksi"})
-fig.update_traces(line_color='#fd6341')
-fig.update_layout(margin=dict(l=0, r=10, b=0, t=30),
-                  yaxis_title=None, xaxis_title=None)
 
-# Menampilkan grafik pada streamlit
-st.plotly_chart(fig, use_container_width=True)
+#Bagian D
 
-# Membuat kolom pada page streamlit
-tl1, tl2 = st.columns(2)
-opt1, opt2, opt3 = st.columns((1, 1, 2))
-cg1, cg2 = st.columns(2)
+T = 2000
 
-# Option pada streamlit untuk memilih tahun produksi minyak
-title2 = '<p style="color:#fe8062; font-size: 23px;">Grafik Jumlah Produksi Minyak Terbesar pada Suatu Tahun</p>'
-tl1.markdown(title2, unsafe_allow_html=True)
-T = int(opt1.selectbox("Tahun", list_tahun))
+tahun = list(dict.fromkeys(dfC['tahun'].tolist()))
 
-# Membuat dataframe baru berdasarkan tahun yang dipilih dan diurutkan
-# berdasarkan produksi minyak terbesar
-df2 = df_csv.loc[df_csv['tahun'] == T].sort_values(
-    by=['produksi'], ascending=False)
+dic_maks = {'negara':[],
+            'kode_negara':[],
+            'region':[],
+            'sub_region':[],
+            'produksi':[],
+            'tahun':tahun}
+dic_min = {'negara':[],
+            'kode_negara':[],
+            'region':[],
+            'sub_region':[],
+            'produksi':[],
+            'tahun':tahun}
+dic_zero = {'negara':[],
+            'kode_negara':[],
+            'region':[],
+            'sub_region':[],
+            'produksi':[],
+            'tahun':tahun}
 
-# Membuat list baru yang berisi nama negara berdasarkan data df2
-list_nama_df2 = []
+for t in tahun:
+    dfC_per_tahun = dfC[dfC['tahun']==t]
+    produksi = np.array(dfC_per_tahun['produksi'].tolist())
+    maks_prod = max(produksi)
+    min_prod = min([p for p in produksi if p != 0])
+    zero_prod = min([p for p in produksi if p == 0])
+    # maksimum
+    kode_negara = dfC_per_tahun[dfC_per_tahun['produksi']==maks_prod]['kode_negara'].tolist()[0]
+    if kode_negara == 'WLD':
+        kode_negara = 'WLF'
+    dic_maks['negara'].append(dfJ[dfJ['alpha-3']==kode_negara]['name'].tolist()[0])
+    dic_maks['kode_negara'].append(kode_negara)
+    dic_maks['region'].append(dfJ[dfJ['alpha-3']==kode_negara]['region'].tolist()[0])
+    dic_maks['sub_region'].append(dfJ[dfJ['alpha-3']==kode_negara]['sub-region'].tolist()[0])
+    dic_maks['produksi'].append(maks_prod)
+    # minimum != 0
+    kode_negara = dfC_per_tahun[dfC_per_tahun['produksi']==min_prod]['kode_negara'].tolist()[0]
+    if kode_negara == 'WLD':
+        kode_negara = 'WLF'
+    dic_min['negara'].append(dfJ[dfJ['alpha-3']==kode_negara]['name'].tolist()[0])
+    dic_min['kode_negara'].append(kode_negara)
+    dic_min['region'].append(dfJ[dfJ['alpha-3']==kode_negara]['region'].tolist()[0])
+    dic_min['sub_region'].append(dfJ[dfJ['alpha-3']==kode_negara]['sub-region'].tolist()[0])
+    dic_min['produksi'].append(min_prod)
+    # zero == 0
+    kode_negara = dfC_per_tahun[dfC_per_tahun['produksi']==zero_prod]['kode_negara'].tolist()[0]
+    if kode_negara == 'WLD':
+        kode_negara = 'WLF'
+    dic_zero['negara'].append(dfJ[dfJ['alpha-3']==kode_negara]['name'].tolist()[0])
+    dic_zero['kode_negara'].append(kode_negara)
+    dic_zero['region'].append(dfJ[dfJ['alpha-3']==kode_negara]['region'].tolist()[0])
+    dic_zero['sub_region'].append(dfJ[dfJ['alpha-3']==kode_negara]['sub-region'].tolist()[0])
+    dic_zero['produksi'].append(zero_prod)
 
-# Memasukkan nama negara dari df_negara ke list_nama_df2 berdasarkan data
-# dari df2
-for i in range(len(list(df2['kode_negara']))):
-    for j in range(len(list(df_negara['alpha-3']))):
-        if list(df2['kode_negara'])[i] == list(df_negara['alpha-3'])[j]:
-            list_nama_df2.append(list(df_negara['Negara'])[j])
-
-df2['negara'] = list_nama_df2
-
-# Slider pada streamlit untuk memilih banyak negara yang akan tampil pada
-# grafik
-B1 = int(opt2.number_input("Banyak Negara", min_value=1, max_value=len(df2)))
-
-df2 = df2[:B1]
-
-# Membuat grafik batang jumlah produksi minyak terbesar pada tahun T
-fig2 = px.bar(df2, x='negara', y='produksi', template='seaborn')
-fig2.update_traces(marker_color='#fe8062')
-fig2.update_layout(margin=dict(l=0, r=10, b=0, t=30),
-                   yaxis_title=None, xaxis_title=None)
-
-# Menampilkan grafik pada streamlit berdasarkan kolom yang telah dibuat
-cg1.plotly_chart(fig2, use_container_width=True)
-
-# Membuat list baru untuk menampung data produksi minyak kumulatif tiap negara
-list_sum = []
-
-# Membuat list baru yang berisi nama negara berdasarkan data df3
-list_nama_df3 = []
-
-# Menjumlahkan produksi minyak tiap negara dan memasukkannya ke list_sum
-for i in list_kodenegarahuruf:
-    a = df_csv.loc[df_csv['kode_negara'] == i, 'produksi'].sum()
-    list_sum.append(a)
-
-# Membuat dataframe baru dan diurutkan berdasarkan produksi kumulatif
-# minyak terbesar
-df3 = pd.DataFrame(list(zip(list_kodenegarahuruf, list_sum)),
-                   columns=['kode_negara', 'produksi_kumulatif']).sort_values(by=['produksi_kumulatif'], ascending=False)
-
-# Memasukkan nama negara dari df_negara ke list_nama_df3 berdasarkan data
-# dari df3
-for i in range(len(list(df3['kode_negara']))):
-    for j in range(len(list(df_negara['alpha-3']))):
-        if list(df3['kode_negara'])[i] == list(df_negara['alpha-3'])[j]:
-            list_nama_df3.append(list(df_negara['Negara'])[j])
-
-df3['negara'] = list_nama_df3
-
-# Slider pada streamlit untuk memilih banyak negara yang akan tampil pada
-# grafik
-title3 = '<p style="color:#fe8062; font-size: 23px;">Grafik Jumlah Produksi Kumulatif Minyak Terbesar</p>'
-tl2.markdown(title3, unsafe_allow_html=True)
-B2 = int(opt3.number_input("Banyak Negara", min_value=1,
-                           max_value=len(df3), key="kumulatif"))
-
-df3 = df3[:B2]
-
-# Membuat grafik batang jumlah produksi minyak kumulatif terbesar
-fig3 = px.bar(df3, x='negara', y='produksi_kumulatif', template='seaborn')
-fig3.update_traces(marker_color='#fe8062')
-fig3.update_layout(margin=dict(l=0, r=10, b=0, t=30),
-                   yaxis_title=None, xaxis_title=None)
-
-# Menampilkan grafik pada streamlit berdasarkan kolom yang telah dibuat
-cg2.plotly_chart(fig3, use_container_width=True)
-
-# Option pada streamlit untuk memilih tahun produksi minyak
-title4 = '<p style="color:#fe8062; font-size: 30px;">Informasi Produksi Minyak Negara</p>'
-st.markdown(title4, unsafe_allow_html=True)
-T2 = int(st.selectbox("Tahun", list_tahun, key="Tahun"))
-
-# Membuat dataframe baru dari df_csv berdasarkan tahun yang dipilih
-df4 = df_csv.loc[df_csv['tahun'] == T2]
-df4 = df4.drop(['tahun'], axis=1)
-df4 = df4.rename(columns={
-                 'produksi': 'produksi_tahun-{}'.format(T2), 'kode_negara': 'kode_negara_huruf'})
-
-# Membuat list baru untuk menampung informasi negara berdasarkan df4
-list_kodenegaraangka_df4 = []
-list_nama_df4 = []
-list_region_df4 = []
-list_subregion_df4 = []
-
-# Membuat beberapa list yang berisi informasi tentang nama negara, kode
-# negara angka, region, dan sub-region dari tiap negara pada df4
-for i in range(len(list(df4['kode_negara_huruf']))):
-    for j in range(len(list(df_negara['alpha-3']))):
-        if list(df4['kode_negara_huruf'])[i] == list(df_negara['alpha-3'])[j]:
-            list_kodenegaraangka_df4.append(list(df_negara['Kode_Negara'])[j])
-            list_nama_df4.append(list(df_negara['Negara'])[j])
-            list_region_df4.append(list(df_negara['Region'])[j])
-            list_subregion_df4.append(list(df_negara['Sub-Region'])[j])
-
-# Membuat kolom baru pada df4 yang berisikan data dari list yang telah dibuat
-df4['nama'] = list_nama_df4
-df4['region'] = list_region_df4
-df4['sub-region'] = list_subregion_df4
-df4['kode_negara_angka'] = list_kodenegaraangka_df4
-
-# Definisi ulang df4 dengan tambahan kolom baru dan diurutkan berdasarkan
-# produksi pada tahun yang dipilih
-df4 = df4[['nama', 'kode_negara_huruf', 'kode_negara_angka', 'region',
-           'sub-region', 'produksi_tahun-{}'.format(T2)]].sort_values(by=['produksi_tahun-{}'.format(T2)], ascending=False)
-
-# Membuat dataframe baru yang berisi produksi kumulatif minyak negara
-df5 = pd.DataFrame(list(zip(list_kodenegarahuruf, list_sum)),
-                   columns=['kode_negara_huruf', 'produksi_kumulatif'])
-
-# Membuat kolom baru pada df5 yang berisikan data dari list yang telah dibuat
-df5['nama'] = list(df_negara['Negara'])
-df5['region'] = list(df_negara['Region'])
-df5['sub-region'] = list(df_negara['Sub-Region'])
-df5['kode_negara_angka'] = list(df_negara['Kode_Negara'])
-
-# Definisi ulang df5 dengan tambahan kolom baru dan diurutkan berdasarkan
-# produksi kumulatif
-df5 = df5[['nama', 'kode_negara_huruf', 'kode_negara_angka', 'region',
-           'sub-region', 'produksi_kumulatif']].sort_values(by=['produksi_kumulatif'], ascending=False)
-
-# Membuat dataframe baru dari df4 dengan menghilangkan data bernilai 0 dan
-# diurutkan berdasarkan produksi dari yang terkecil
-df_nozero = df4[df4['produksi_tahun-{}'.format(T2)] != 0].sort_values(
-    by=['produksi_tahun-{}'.format(T2)], ascending=True)
-
-# Membuat dataframe baru dari df5 dengan menghilangkan data bernilai 0 dan
-# diurutkan berdasarkan produksi kumulatif dari yang terkecil
-df_minproduksikumulatif = df5[df5['produksi_kumulatif'.format(T2)] != 0].sort_values(
-    by=['produksi_kumulatif'], ascending=True)
-
-# Membuat kolom pada page streamlit
-col1, col2, col3, col4 = st.columns(4)
-
-# Menampilkan data berdasarkan kolom yang telah dibuat
-with col1:
-    # Metric pada streamlit untuk menampilkan data jumlah produksi minyak
-    # terbesar pada tahun yang dipilih
-    st.metric("Jumlah Produksi Minyak Terbesar Tahun {}".format(
-        T2), df4.iloc[0]['produksi_tahun-{}'.format(T2)])
-    # Caption untuk menampilkan informasi mengenai negara pada metric
-    st.caption("Negara: {}  \nKode Negara: {} {}  \nRegion: {}  \nSub-Region: {}".format(
-        df4.iloc[0]['nama'], df4.iloc[0]['kode_negara_huruf'], df4.iloc[0]['kode_negara_angka'], df4.iloc[0]['region'], df4.iloc[0]['sub-region']))
-with col2:
-    # Metric pada streamlit untuk menampilkan data jumlah produksi minyak
-    # kumulatif terbesar
-    st.metric("Jumlah Produksi Minyak Kumulatif Terbesar",
-              round(df5.iloc[0]['produksi_kumulatif'], 3))
-    # Caption untuk menampilkan informasi mengenai negara pada metric
-    st.caption("Negara: {}  \nKode Negara: {} {}  \nRegion: {}  \nSub-Region: {}".format(
-        df5.iloc[0]['nama'], df5.iloc[0]['kode_negara_huruf'], df5.iloc[0]['kode_negara_angka'], df5.iloc[0]['region'], df5.iloc[0]['sub-region']))
-with col3:
-    # Metric pada streamlit untuk menampilkan data jumlah produksi minyak
-    # terkecil pada tahun yang dipilih
-    st.metric("Jumlah Produksi Minyak Terkecil Tahun {}".format(
-        T2), df_nozero.iloc[0]['produksi_tahun-{}'.format(T2)])
-    # Caption untuk menampilkan informasi mengenai negara pada metric
-    st.caption("Negara: {}  \nKode Negara: {} {}  \nRegion: {}  \nSub-Region: {}".format(
-        df_nozero.iloc[0]['nama'], df_nozero.iloc[0]['kode_negara_huruf'], df_nozero.iloc[0]['kode_negara_angka'], df_nozero.iloc[0]['region'], df_nozero.iloc[0]['sub-region']))
-with col4:
-    # Metric pada streamlit untuk menampilkan data jumlah produksi minyak
-    # kumulatif terkecil
-    st.metric("Jumlah Produksi Minyak Kumulatif Terkecil",
-              df_minproduksikumulatif.iloc[0]['produksi_kumulatif'])
-    # Caption untuk menampilkan informasi mengenai negara pada metric
-    st.caption("Negara: {}  \nKode Negara: {} {}  \nRegion: {}  \nSub-Region: {}".format(df_minproduksikumulatif.iloc[0]['nama'], df_minproduksikumulatif.iloc[0][
-        'kode_negara_huruf'], df_minproduksikumulatif.iloc[0]['kode_negara_angka'], df_minproduksikumulatif.iloc[0]['region'], df_minproduksikumulatif.iloc[0]['sub-region']))
-
-# Membuat dataframe baru dari df4 dengan produksi bernilai 0 pada tahun
-# yang dipilih
-df_produksinol = df4[df4['produksi_tahun-{}'.format(T2)] == 0].reset_index()
-
-del df_produksinol['produksi_tahun-{}'.format(T2)]
-del df_produksinol['index']
-
-# Tabel yang menampilkan data negara dengan produksi bernilai 0 pada tahun
-# yang dipilih
-table1 = go.Figure(data=[go.Table(header=dict(values=list(df_produksinol.columns), fill_color='#fc4422', line_color='#ffc8ba', font=dict(color='#fbe8e6'), align='left'), cells=dict(
-    values=df_produksinol.transpose().values.tolist(), fill_color='#fe8062', line_color='#ffc8ba', font=dict(color='#1c1c1c'), align='left'))])
-table1.update_layout(title_text="Negara yang Tidak Memproduksi Minyak pada Tahun {}".format(T2),
-                     title_x=0, margin=dict(l=0, r=10, b=10, t=30), height=1000)
-
-# Membuat dataframe baru dari df4 dengan produksi kumulatif bernilai 0
-df_produksikumulatifnol = df5[df5['produksi_kumulatif'.format(
-    T)] == 0].reset_index()
-
-del df_produksikumulatifnol['produksi_kumulatif'.format(T)]
-del df_produksikumulatifnol['index']
-
-# Tabel yang menampilkan data negara dengan produksi kumulatif bernilai 0
-# pada tahun yang dipilih
-table2 = go.Figure(data=[go.Table(header=dict(values=list(df_produksikumulatifnol.columns), fill_color='#fc4422', line_color='#ffc8ba', font=dict(color='#fbe8e6'), align='left'), cells=dict(
-    values=df_produksikumulatifnol.transpose().values.tolist(), fill_color='#fe8062', line_color='#ffc8ba', font=dict(color='#1c1c1c'), align='left'))])
-table2.update_layout(title_text="Negara yang Tidak Memproduksi Minyak pada Keseluruhan Tahun",
-                     title_x=0, margin=dict(l=0, r=10, b=10, t=30), height=1000)
-
-# Membuat kolom pada page streamlit
-tb1, tb2 = st.columns(2)
-
-# Menampilkan tabel berdasarkan kolom yang telah dibuat
-tb1.plotly_chart(table1, use_container_width=True)
-tb2.plotly_chart(table2, use_container_width=True)
-
-# Menghilangkan menu pada page streamlit
-st.markdown(""" <style>
-#MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
-</style> """, unsafe_allow_html=True)
+df_maks = pd.DataFrame(dic_maks)
+df_min = pd.DataFrame(dic_min)
+df_zero = pd.DataFrame(dic_zero)
