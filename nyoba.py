@@ -8,12 +8,14 @@ import streamlit as st
 from fileHandler import csvHandler,jsonHandler
 from PIL import Image
 
-st.sidebar.title("Tentang")
+#Additional Info
 st.sidebar.write('Creator Info : Muhammad Zaidan R / 12220011') 
 image = Image.open('logoitb.png')
 st.sidebar.image(image)
+st.sidebar.title("Menu Pilihan")
+st.sidebar.header('Pengaturan Jumlah Produksi tiap Tahun')
 
-#READ DATA JSON
+#Read json
 with open("kode_negara_lengkap.json", "r") as rfile:
     data = json.load(rfile)
 # for i in data:
@@ -21,12 +23,12 @@ with open("kode_negara_lengkap.json", "r") as rfile:
 print(data[0])
 dfJ = pd.DataFrame(data)
 
-#READ DATA CSV
+#Read csv
 csv = pd.read_csv("produksi_minyak_mentah.csv")
 df = pd.DataFrame(csv)
 print(df)
 
-#MEMBUAT DATA FRAME TIAP FILE
+#Mengubah mjd Data Frame 
 st.title('Analisis Data Produksi Minyak Mentah Dunia')
 ch_ = csvHandler('produksi_minyak_mentah.csv')
 jh_ = jsonHandler('kode_negara_lengkap.json')
@@ -43,8 +45,6 @@ for i in kode_kumpulanngr :
     dfC = dfC[dfC.kode_negara != i]
 print(dfC)
 
-st.sidebar.title("Menu Pilihan")
-st.sidebar.header('Pengaturan Jumlah Produksi Per Bulan')
 
 #Bagian A
 
