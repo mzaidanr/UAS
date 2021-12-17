@@ -87,8 +87,8 @@ dfb = dfb.sort_values(by='produksi', ascending = False)
 dfbaru = dfb[:n]
 lcol.write(dfbaru)
 
-plt.title('{B} Negara dengan Produksi Terbesar pada Tahun {T}'.format(B=n,T=tahun))
 dfbaru.plot.bar(x='kode_negara', y='produksi', color='cyan')
+plt.title('{B} Negara dengan Produksi Terbesar pada Tahun {T}'.format(B=n,T=tahun))
 plt.xlabel('Kode Negara')
 plt.ylabel('Jumlah Produksi')
 plt.show()
@@ -115,8 +115,8 @@ dk1 = dk[:n]
 
 lc.write(dk1)
 
-plt.title('{B} Negara dengan Produksi Kumulatif Terbesar pada Tahun {T}'.format(B=n,T=tahun))
 dk1.plot.bar(x='kode_negara', y='kumulatif', color='cyan')
+plt.title('{B} Negara dengan Produksi Kumulatif Terbesar pada Tahun {T}'.format(B=n,T=tahun))
 plt.xlabel('Kode Negara')
 plt.ylabel('Produksi Kumulatif')
 plt.show()
