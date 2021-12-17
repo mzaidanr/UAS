@@ -68,7 +68,7 @@ left_col.write(df2)
 
 fig, ax = plt.subplots()
 ax.plot(df2['tahun'], df2['produksi'], label = df2['tahun'], color='blue')
-ax.set_title("Jumlah Produksi Per Tahun di Negara Pilihan")
+ax.set_title("Jumlah Produksi Per Tahun di Negara ", negara)
 ax.set_xlabel("Tahun", fontsize = 11)
 ax.set_ylabel("Jumlah Produksi", fontsize = 11)
 ax.legend(fontsize = 2)
