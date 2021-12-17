@@ -233,4 +233,3 @@ dfproduksikumulatifnol['sub-region'] = listsubregionkumulatifnol
                                                       
 st.write(dfproduksinol)
 st.write(dfproduksikumulatifnol)
-
