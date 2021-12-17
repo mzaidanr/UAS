@@ -54,7 +54,7 @@ negara = st.sidebar.selectbox('Pilih negara : ',nama_ngr)
 
 kode = dfJ[dfJ['name']==negara]['alpha-3'].tolist()[0]
 
-st.sidebar.write('Negara : ',negara)
+st.sidebar.write('Kode Negara : ', kode)
 
 df['produksi'] = df['produksi'].astype(str).str.replace(".", "", regex=True).astype(float)
 df['produksi'] =df['produksi'].astype(str).str.replace(",", "", regex=True).astype(float)
