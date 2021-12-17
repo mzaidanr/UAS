@@ -10,6 +10,10 @@ dfJ = jh_.dataFrame
 ch_ = csvHandler('produksi_minyak_mentah.csv')
 dfC = ch_.dataFrame
 
+#Additional Info
+st.sidebar.write('Creator Info : Muhammad Zaidan R / 12220011')
+
+
 #Bagian A
 st.sidebar.title('Pilihan Pengaturan')
 left_col, mid_col, right_col = st.columns(3)
@@ -99,66 +103,131 @@ plt.show()
 st.pyplot(plt)
 
 #Bagian D
-T = st.sidebar.number_input("Pilih Tahun produksi", min_value=1971, max_value=2015)
 
-tahun = list(dict.fromkeys(dfC['tahun'].tolist()))
+c1, c2, c3, c4 = st.columns(4)
+col1, col2, col3, col4 = st.columns(4)
 
-dic_maks = {'negara':[],
-            'kode_negara':[],
-            'region':[],
-            'sub_region':[],
-            'produksi':[],
-            'tahun':tahun}
-dic_min = {'negara':[],
-            'kode_negara':[],
-            'region':[],
-            'sub_region':[],
-            'produksi':[],
-            'tahun':tahun}
-dic_zero = {'negara':[],
-            'kode_negara':[],
-            'region':[],
-            'sub_region':[],
-            'produksi':[],
-            'tahun':tahun}
+dfb = dfC.loc[dfC['tahun'] == tahun]
+dfb = dfb.sort_values(by='produksi', ascending = False)
 
-for t in tahun:
-    dfC_per_tahun = dfC[dfC['tahun']==t]
-    produksi = np.array(dfC_per_tahun['produksi'].tolist())
-    maks_prod = max(produksi)
-    min_prod = min([p for p in produksi if p != 0])
-    zero_prod = min([p for p in produksi if p == 0])
-    # maksimum
-    kode_negara = dfC_per_tahun[dfC_per_tahun['produksi']==maks_prod]['kode_negara'].tolist()[0]
-    if kode_negara == 'WLD':
-        kode_negara = 'WLF'
-    dic_maks['negara'].append(dfJ[dfJ['alpha-3']==kode_negara]['name'].tolist()[0])
-    dic_maks['kode_negara'].append(kode_negara)
-    dic_maks['region'].append(dfJ[dfJ['alpha-3']==kode_negara]['region'].tolist()[0])
-    dic_maks['sub_region'].append(dfJ[dfJ['alpha-3']==kode_negara]['sub-region'].tolist()[0])
-    dic_maks['produksi'].append(maks_prod)
-    # minimum != 0
-    kode_negara = dfC_per_tahun[dfC_per_tahun['produksi']==min_prod]['kode_negara'].tolist()[0]
-    if kode_negara == 'WLD':
-        kode_negara = 'WLF'
-    dic_min['negara'].append(dfJ[dfJ['alpha-3']==kode_negara]['name'].tolist()[0])
-    dic_min['kode_negara'].append(kode_negara)
-    dic_min['region'].append(dfJ[dfJ['alpha-3']==kode_negara]['region'].tolist()[0])
-    dic_min['sub_region'].append(dfJ[dfJ['alpha-3']==kode_negara]['sub-region'].tolist()[0])
-    dic_min['produksi'].append(min_prod)
-    # zero == 0
-    kode_negara = dfC_per_tahun[dfC_per_tahun['produksi']==zero_prod]['kode_negara'].tolist()[0]
-    if kode_negara == 'WLD':
-        kode_negara = 'WLF'
-    dic_zero['negara'].append(dfJ[dfJ['alpha-3']==kode_negara]['name'].tolist()[0])
-    dic_zero['kode_negara'].append(kode_negara)
-    dic_zero['region'].append(dfJ[dfJ['alpha-3']==kode_negara]['region'].tolist()[0])
-    dic_zero['sub_region'].append(dfJ[dfJ['alpha-3']==kode_negara]['sub-region'].tolist()[0])
-    dic_zero['produksi'].append(zero_prod)
+#Maksimum
+jumlah_produksi = dfb[:1].iloc[0]['produksi']
+kode_negara = dfb[:1].iloc[0]['kode_negara']
+nama_negara = ""
+region_negara = ""
+subregion_negara = ""
 
-df_maks = pd.DataFrame(dic_maks)
-df_min = pd.DataFrame(dic_min)
-df_zero = pd.DataFrame(dic_zero)
+for i in range(len(dfJ)):
+    if list(dfJ['alpha-3'])[i]==kode_negara:
+        nama_negara = list(dfJ['name'])[i]
+        region_negara = list(dfJ['region'])[i]
+        subregion_negara = list(dfJ['sub-region'])[i]
+        
+c1.write('Negara dengan Produksi Terbesar')
+col1.write(jumlah_produksi)
+col1.write(kode_negara)
+col1.write(nama_negara)
+col1.write(region_negara)
+col1.write(subregion_negara)
 
-#Additional Info
-st.write('Creator Info : Muhammad Zaidan R / 12220011')
+jumlah_produksi = dk[:1].iloc[0]['kumulatif']
+kode_negara = dk[:1].iloc[0]['kode_negara']
+nama_negara = ""
+region_negara = ""
+subregion_negara = ""
+
+for i in range(len(dfJ)):
+    if list(dfJ['alpha-3'])[i]==kode_negara:
+        nama_negara = list(dfJ['name'])[i]
+        region_negara = list(dfJ['region'])[i]
+        subregion_negara = list(dfJ['sub-region'])[i]
+        
+c2.write('Negara dengan Produksi Terbesar pada Keseluruhan Tahun')
+col2.write(jumlah_produksi)
+col2.write(kode_negara)
+col2.write(nama_negara)
+col2.write(region_negara)
+col2.write(subregion_negara)
+
+
+#Minimum tak 0
+dfterkecil = dfb[dfb.produksi !=0]
+dfterkecil = dfterkecil.sort_values(by=['produksi'],ascending=True)
+jumlah_produksi = dfterkecil[:1].iloc[0]['produksi']
+kode_negara = dfterkecil[:1].iloc[0]['kode_negara']
+nama_negara = ""
+region_negara = ""
+subregion_negara = ""
+                                    
+for i in range(len(dfJ)):
+    if list(dfJ['alpha-3'])[i]==kode_negara:
+        nama_negara = list(dfJ['name'])[i]
+        region_negara = list(dfJ['region'])[i]
+        subregion_negara = list(dfJ['sub-region'])[i]
+                                    
+c3.write('Negara dengan Produksi Terkecil')
+col3.write(jumlah_produksi)
+col3.write(kode_negara)
+col3.write(nama_negara)
+col3.write(region_negara)
+col3.write(subregion_negara)
+
+dfakumulatifmin=dk[dk.kumulatif !=0]
+dfakumulatifmin = dfakumulatifmin[:1].sort_values(by=['kumulatif'], ascending = True)
+jumlah_produksi = dfakumulatifmin[:1].iloc[0]['kumulatif']
+kode_negara = dfakumulatifmin[:1].iloc[0]['kode_negara']
+nama_negara = ""
+region_negara = ""
+subregion_negara = ""
+                                                
+for i in range(len(dfJ)):
+    if list(dfJ['alpha-3'])[i]==kode_negara:
+        nama_negara = list(dfJ['name'])[i]
+        region_negara = list(dfJ['region'])[i]
+        subregion_negara = list(dfJ['sub-region'])[i]
+
+
+c4.write('Negara dengan Produksi Terkecil Pada Keseluruhan Tahun')
+col4.write(jumlah_produksi)
+col4.write(kode_negara)
+col4.write(nama_negara)
+col4.write(region_negara)
+col4.write(subregion_negara)
+ 
+
+#Nol
+dfproduksinol = dfb[dfb.produksi == 0]
+listnegaranol = []
+listregionol = []
+listsubregionol = []
+
+for i in range(len(dfproduksinol)):
+    for j in range(len(dfJ)):
+        if list (dfproduksinol['kode_negara'])[i] == list(dfJ['alpha-3'])[j]:
+            listnegaranol.append(list(dfJ['name'])[j])
+            listregionol.append(list(dfJ['region'])[j])
+            listsubregionol.append(list(dfJ['sub-region'])[j])
+
+dfproduksinol['negara'] = listnegaranol
+dfproduksinol['region'] = listregionol
+dfproduksinol['sub-region'] = listsubregionol
+ 
+                                                        
+dfproduksikumulatifnol = dfb[dfb.produksi == 0]
+listnegarakumulatifnol = []
+listregionkumulatifnol = []
+listsubregionkumulatifnol = []
+
+for i in range(len(dfproduksikumulatifnol)):
+    for j in range(len(dfJ)):
+        if list (dfproduksikumulatifnol['kode_negara'])[i] == list(dfJ['alpha-3'])[j]:
+            listnegarakumulatifnol.append(list(dfJ['name'])[j])
+            listregionkumulatifnol.append(list(dfJ['region'])[j])
+            listsubregionkumulatifnol.append(list(dfJ['sub-region'])[j])
+
+dfproduksikumulatifnol['negara'] = listnegarakumulatifnol
+dfproduksikumulatifnol['region'] = listregionkumulatifnol
+dfproduksikumulatifnol['sub-region'] = listsubregionkumulatifnol   
+                                                      
+st.write(dfproduksinol)
+st.write(dfproduksikumulatifnol)
