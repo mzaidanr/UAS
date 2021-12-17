@@ -33,6 +33,7 @@ plt.plot(tahun,produksi,label='Nilai Produksi')
 plt.xlabel('Tahun')
 plt.ylabel('Produksi')
 plt.legend()
+st.pyplot(plt)
 
 #Bagian B
 st.sidebar.write('Pengaturan Produksi Negara per Tahun')
@@ -67,6 +68,7 @@ plt.grid(True, color="blue", linewidth="0.7", linestyle="-.", zorder=0)
 plt.xlabel('Negara')
 plt.ylabel('Banyaknya Produksi')
 plt.show()
+st.pyplot(plt)
 
 #Bagian C
 
@@ -156,4 +158,3 @@ df_maks = pd.DataFrame(dic_maks)
 df_min = pd.DataFrame(dic_min)
 df_zero = pd.DataFrame(dic_zero)
 '''
-
