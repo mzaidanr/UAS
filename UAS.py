@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
 from fileHandler import csvHandler,jsonHandler
-
+from PIL import Image
 
 jh_ = jsonHandler('kode_negara_lengkap.json')
 dfJ = jh_.dataFrame
@@ -12,7 +12,8 @@ dfC = ch_.dataFrame
 
 #Additional Info
 st.sidebar.write('Creator Info : Muhammad Zaidan R / 12220011')
-
+image = Image.open('logoitb.png')
+st.sidebar.image(image)
 
 #Bagian A
 st.sidebar.title('Pilihan Pengaturan')
@@ -231,3 +232,4 @@ dfproduksikumulatifnol['sub-region'] = listsubregionkumulatifnol
                                                       
 st.write(dfproduksinol)
 st.write(dfproduksikumulatifnol)
+
