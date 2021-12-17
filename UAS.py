@@ -38,7 +38,6 @@ st.pyplot(plt)
 #Bagian B
 st.write('Grafik Negara dengan Produksi Terbesar')
 
-
 st.sidebar.write('Pengaturan Produksi Negara per Tahun')
 T = st.sidebar.number_input("Pilih Tahun produksi", min_value=1971, max_value=2015)
 B = st.sidebar.number_input("Pilih Banyak Negara", min_value=1, max_value=None, value=3)
@@ -66,7 +65,7 @@ df__ = df__.sort_values('produksi_maks',ascending=False).reset_index()
 
 plt.title('{B} Negara dengan Produksi Terbesar pada Tahun {T}'.format(B=B,T=T))
 plt.bar(df__['negara'][:B],df__['produksi_maks'][:B],width=0.5, bottom=None, align="center",
-            color="lightblue", edgecolor="aquamarine", data=None, zorder=3)
+            color="blue", data=None, zorder=3)
 plt.grid(True, color="blue", linewidth="0.7", linestyle="-.", zorder=0)
 plt.xlabel('Negara')
 plt.ylabel('Banyaknya Produksi')
@@ -79,18 +78,18 @@ st.write('Grafik Negara dengan Produksi Kumulatif Terbesar')
 st.sidebar.write('Pengaturan Produksi Negara per Tahun')
 B = st.sidebar.number_input("Pilih Banyak Negara", min_value=1, max_value=None)
 
-list_a = []
-kumulatif = []
+list_ngr = []
+kmltf = []
 
 for i in list (dfC['kode_negara']) :
-    if i not in list_a:
-        list_a.append(i)
+    if i not in list_ngr:
+        list_ngr.append(i)
         
-for i in list_a :
+for i in list_ngr :
     a=dfC.loc[dfC['kode_negara'] ==i,'produksi'].sum()
-    kumulatif.append(a)
+    kmltf.append(a)
     
-dk = pd.DataFrame(list(zip(list_a,kumulatif)), columns = ['kode_negara','kumulatif'])
+dk = pd.DataFrame(list(zip(list_ngr,kmltf)), columns = ['kode_negara','kumulatif'])
 dk = dk.sort_values(by=['kumulatif'], ascending = False)
 dk = dk[:B]
 
