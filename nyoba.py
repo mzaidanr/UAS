@@ -64,8 +64,6 @@ df2 = pd.DataFrame(df,columns= ['kode_negara','tahun','produksi'])
 df2=df2.loc[df2['kode_negara']==kode]
 df2['produksi'] = pd.to_numeric(df2['produksi'], errors='coerce')
 
-left_col.write(df2)
-
 fig, ax = plt.subplots()
 ax.plot(df2['tahun'], df2['produksi'], label = df2['tahun'], color='blue')
 ax.set_title("Jumlah Produksi per Tahun di Negara {A} ".format(A=negara))
@@ -85,7 +83,6 @@ n = st.sidebar.slider("Pilih Banyak Negara", min_value=1, max_value=None)
 dfb = dfC.loc[dfC['tahun'] == tahun]
 dfb = dfb.sort_values(by='produksi', ascending = False)
 dfbaru = dfb[:n]
-lcol.write(dfbaru)
 
 dfbaru.plot.bar(x='kode_negara', y='produksi', color='cyan')
 plt.title('{B} Negara dengan Produksi Terbesar pada Tahun {T}'.format(B=n,T=tahun))
@@ -112,8 +109,6 @@ dk = pd.DataFrame(list(zip(kode_kmltf,kumulatif)), columns = ['kode_negara','kum
 dk = dk.sort_values(by=['kumulatif'], ascending = False)
 dk2 = dk.sort_values(by=['kumulatif'], ascending = True)
 dk1 = dk[:n]
-
-lc.write(dk1)
 
 dk1.plot.bar(x='kode_negara', y='kumulatif', color='cyan')
 plt.title('{B} Negara dengan Produksi Kumulatif Terbesar pada Tahun {T}'.format(B=n,T=tahun))
