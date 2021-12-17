@@ -48,8 +48,7 @@ print(dfC)
 
 #Bagian A
 
-left_col, right_col = st.columns(2)
-left_col.write("Data Produksi suatu Negara ")
+st.write("Data Produksi suatu Negara ")
 negara = st.sidebar.selectbox('Pilih negara : ',nama_ngr) 
 
 kode = dfJ[dfJ['name']==negara]['alpha-3'].tolist()[0]
@@ -71,11 +70,10 @@ ax.set_xlabel("Tahun", fontsize = 11)
 ax.set_ylabel("Jumlah Produksi", fontsize = 11)
 ax.legend(fontsize = 2)
 plt.show()
-right_col.pyplot(fig)
+st.pyplot(fig)
 
 #Bagian B
-lcol, rcol = st.columns(2)
-lcol.write('Negara dengan Produksi Terbesar Tahun')
+st.write('Negara dengan Produksi Terbesar Tahun')
 st.sidebar.header('Pengaturan Data Produksi Terbesar dan Kumulatif suatu Negara')
 tahun = st.sidebar.number_input("Pilih Tahun produksi", min_value=1971, max_value=2015)
 n = st.sidebar.slider("Pilih Banyak Negara", min_value=1, max_value=None)
@@ -89,11 +87,10 @@ plt.title('{B} Negara dengan Produksi Terbesar pada Tahun {T}'.format(B=n,T=tahu
 plt.xlabel('Kode Negara')
 plt.ylabel('Jumlah Produksi')
 plt.show()
-rcol.pyplot(plt)
+st.pyplot(plt)
 
 #Bagian C
-lc , rc = st.columns(2)
-lc.write('Negara dengan Produksi Kumulatif Terbesar')
+st.write('Negara dengan Produksi Kumulatif Terbesar')
 kode_kmltf = []
 kumulatif = []
 
@@ -115,7 +112,7 @@ plt.title('{B} Negara dengan Produksi Kumulatif Terbesar pada Tahun {T}'.format(
 plt.xlabel('Kode Negara')
 plt.ylabel('Produksi Kumulatif')
 plt.show()
-rc.pyplot(plt)
+st.pyplot(plt)
 
 #Bagian D
 c1, c2, c3, c4 = st.columns(4)
