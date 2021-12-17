@@ -67,10 +67,10 @@ df2['produksi'] = pd.to_numeric(df2['produksi'], errors='coerce')
 left_col.write(df2)
 
 fig, ax = plt.subplots()
-ax.plot(df2['tahun'], df2['produksi'], label = df2['tahun'], color='orange')
+ax.plot(df2['tahun'], df2['produksi'], label = df2['tahun'], color='red')
 ax.set_title("Jumlah Produksi Per Tahun di Negara Pilihan")
-ax.set_xlabel("Tahun", fontsize = 12)
-ax.set_ylabel("Jumlah Produksi", fontsize = 12)
+ax.set_xlabel("Tahun", fontsize = 11)
+ax.set_ylabel("Jumlah Produksi", fontsize = 11)
 ax.legend(fontsize = 2)
 plt.show()
 right_col.pyplot(fig)
@@ -87,7 +87,9 @@ dfb = dfb.sort_values(by='produksi', ascending = False)
 dfbaru = dfb[:n]
 lcol.write(dfbaru)
 
-dfbaru.plot.bar(x='kode_negara', y='produksi')
+dfbaru.plot.bar(x='kode_negara', y='produksi', color='cyan')
+plt.xlabel('Kode Negara')
+plt.ylabel('Jumlah Produksi')
 plt.show()
 rcol.pyplot(plt)
 
@@ -111,7 +113,9 @@ dk2 = dk.sort_values(by=['kumulatif'], ascending = True)
 dk1 = dk[:n]
 
 lc.write(dk1)
-dk1.plot.bar(x='kode_negara', y='kumulatif') 
+dk1.plot.bar(x='kode_negara', y='kumulatif', color='cyan')
+plt.xlabel('Kode Negara')
+plt.ylabel('Produksi Kumulatif')
 plt.show()
 rc.pyplot(plt)
 
