@@ -48,7 +48,7 @@ print(dfC)
 
 #Bagian A
 
-st.write("Data Produksi suatu Negara ")
+st.header("Data Produksi suatu Negara ")
 left_col, right_col = st.columns(2)
 negara = st.sidebar.selectbox('Pilih negara : ',nama_ngr) 
 
@@ -76,7 +76,7 @@ plt.show()
 right_col.pyplot(fig)
 
 #Bagian B
-st.write('Negara dengan Produksi Terbesar Tahun')
+st.header('Negara dengan Produksi Terbesar pada 1 Tahun')
 st.sidebar.header('Pengaturan Data Produksi Terbesar dan Kumulatif suatu Negara')
 tahun = st.sidebar.number_input("Pilih Tahun produksi", min_value=1971, max_value=2015)
 n = st.sidebar.slider("Pilih Banyak Negara", min_value=1, max_value=None)
@@ -93,7 +93,7 @@ plt.show()
 st.pyplot(plt)
 
 #Bagian C
-st.write('Negara dengan Produksi Kumulatif Terbesar')
+st.header('Negara dengan Produksi Kumulatif Terbesar')
 kode_kmltf = []
 kumulatif = []
 
