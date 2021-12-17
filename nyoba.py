@@ -78,10 +78,9 @@ right_col.pyplot(fig)
 #Bagian B
 lcol, rcol = st.columns(2)
 lcol.write('Negara dengan Produksi Terbesar Tahun')
-st.sidebar.header('Pengaturan Data Produksi Terbesar suatu Negara')
+st.sidebar.header('Pengaturan Data Produksi Terbesar dan Kumulatif suatu Negara')
 tahun = st.sidebar.number_input("Pilih Tahun produksi", min_value=1971, max_value=2015)
 n = st.sidebar.slider("Pilih Banyak Negara", min_value=1, max_value=None)
-
 
 dfb = dfC.loc[dfC['tahun'] == tahun]
 dfb = dfb.sort_values(by='produksi', ascending = False)
@@ -98,9 +97,6 @@ lc.write('Negara dengan Produksi Kumulatif Terbesar')
 kode_kmltf = []
 kumulatif = []
 
-st.sidebar.header('Pengaturan Data Produksi Terbesar Kumulatif suatu Negara')
-B = st.sidebar.slider("Pilih Banyak Negara", min_value=1, max_value=None)
-
 for i in list (dfC['kode_negara']) :
     if i not in kode_kmltf:
         kode_kmltf.append(i)
@@ -112,7 +108,7 @@ for i in kode_kmltf :
 dk = pd.DataFrame(list(zip(kode_kmltf,kumulatif)), columns = ['kode_negara','kumulatif'])
 dk = dk.sort_values(by=['kumulatif'], ascending = False)
 dk2 = dk.sort_values(by=['kumulatif'], ascending = True)
-dk1 = dk[:B]
+dk1 = dk[:n]
 
 lc.write(dk1)
 dk1.plot.bar(x='kode_negara', y='kumulatif') 
