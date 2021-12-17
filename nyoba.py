@@ -49,7 +49,7 @@ print(dfC)
 #Bagian A
 
 left_col, right_col = st.columns(2)
-left_col.write("Data Produksi Negara Pilihan")
+left_col.write("Data Produksi suatu Negara ")
 negara = st.sidebar.selectbox('Pilih negara : ',nama_ngr) 
 
 kode = dfJ[dfJ['name']==negara]['alpha-3'].tolist()[0]
@@ -68,7 +68,8 @@ left_col.write(df2)
 
 fig, ax = plt.subplots()
 ax.plot(df2['tahun'], df2['produksi'], label = df2['tahun'], color='blue')
-ax.set_title("Jumlah Produksi Per Tahun di Negara ", negara)
+plt.title('Jumlah Produksi per Tahun di Negara {A}'.format(A=negara))
+ax.set_title("Jumlah Produksi Per Tahun di Negara {A} ".format(A=negara))
 ax.set_xlabel("Tahun", fontsize = 11)
 ax.set_ylabel("Jumlah Produksi", fontsize = 11)
 ax.legend(fontsize = 2)
