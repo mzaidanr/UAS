@@ -4,6 +4,7 @@ import numpy as np
 import streamlit as st
 from fileHandler import csvHandler,jsonHandler
 
+
 jh_ = jsonHandler('kode_negara_lengkap.json')
 dfJ = jh_.dataFrame
 ch_ = csvHandler('produksi_minyak_mentah.csv')
@@ -44,7 +45,7 @@ B = st.sidebar.number_input("Pilih Banyak Negara", min_value=1, max_value=None, 
 
 dfC = dfC[dfC['tahun']==T]
 kode_negara = dfC[dfC['tahun']==T]['kode_negara'].tolist()
-produksi = dfC[dfC['tahun']==T]['produksi'].tolist()
+produksi_1 = dfC[dfC['tahun']==T]['produksi'].tolist()
 
 maks_produksi = []
 negara_tiaptahun = []
@@ -52,9 +53,9 @@ negara_tiaptahun = []
 kode_negara = list(dict.fromkeys(kode_negara))
 for kode in kode_negara:
     try:
-        produksi = dfC[dfC['kode_negara']==kode]['produksi'].tolist()
+        produksi_1 = dfC[dfC['kode_negara']==kode]['produksi'].tolist()
         negara = dfJ[dfJ['alpha-3']==kode]['name'].tolist()[0]
-        maks_produksi.append(max(produksi))
+        maks_produksi.append(max(produksi_1))
         negara_tiaptahun.append(negara)
     except:
         continue
@@ -160,3 +161,5 @@ df_maks = pd.DataFrame(dic_maks)
 df_min = pd.DataFrame(dic_min)
 df_zero = pd.DataFrame(dic_zero)
 '''
+
+#Additional Info
