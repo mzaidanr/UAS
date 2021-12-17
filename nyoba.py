@@ -87,7 +87,7 @@ dfb = dfb.sort_values(by='produksi', ascending = False)
 dfbaru = dfb[:n]
 lcol.write(dfbaru)
 
-dfbaru.plot.bar(x='Kode Negara', y='Produksi')
+dfbaru.plot.bar(x='kode_negara', y='produksi')
 plt.show()
 rcol.pyplot(plt)
 
@@ -111,7 +111,7 @@ dk2 = dk.sort_values(by=['kumulatif'], ascending = True)
 dk1 = dk[:n]
 
 lc.write(dk1)
-dk1.plot.bar(x='Kode Negara', y='Produksi Kumulatif') 
+dk1.plot.bar(x='kode_negara', y='kumulatif') 
 plt.show()
 rc.pyplot(plt)
 
