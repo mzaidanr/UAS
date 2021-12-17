@@ -120,6 +120,7 @@ st.pyplot(plt)
 #Bagian D
 c1, c2, c3, c4 = st.columns(4)
 col1, col2, col3, col4 = st.columns(4)
+lft, rght = st.columns(2)
 
 #Maksimum
 jumlah_produksi = dfb[:1].iloc[0]['produksi']
@@ -240,7 +241,7 @@ df_produksikmltf['negara'] = listnegarakumulatifnol
 df_produksikmltf['region'] = listregionkumulatifnol
 df_produksikmltf['sub-region'] = listsubregionkumulatifnol   
 
-st.write('Data Negara dengan Produksi Nol')                                                     
-st.write(df_produksi0)
-st.write('Data Negara dengan Produksi Kumulatif Nol')       
-st.write(df_produksikmltf)
+lft.write('Data Negara dengan Produksi Nol')                                                     
+lft.write(df_produksi0)
+rght.write('Data Negara dengan Produksi Kumulatif Nol')       
+rght.write(df_produksikmltf)
