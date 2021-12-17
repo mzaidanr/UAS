@@ -42,17 +42,35 @@ st.sidebar.write('Pengaturan Produksi Negara per Tahun')
 T = st.sidebar.number_input("Pilih Tahun produksi", min_value=1971, max_value=2015)
 B = st.sidebar.number_input("Pilih Banyak Negara", min_value=1, max_value=None, value=3)
 
-lcol, rcol = st.columns(2)
-lcol.write('Negara dengan Produksi Terbesar')
+dfC = dfC[dfC['tahun']==T]
+kode_negara = dfC[dfC['tahun']==T]['kode_negara'].tolist()
+produksi = dfC[dfC['tahun']==T]['produksi'].tolist()
 
-dfb = dfC.loc[dfC['tahun'] == tahun]
-dfb = dfb.sort_values(by='produksi', ascending = False)
-dfbaru = dfb[:B]
-lcol.write(dfbaru)
+maks_produksi = []
+negara_tiaptahun = []
 
-dfbaru.plot.bar(x='kode_negara', y='produksi')
+kode_negara = list(dict.fromkeys(kode_negara))
+for kode in kode_negara:
+    try:
+        produksi = dfC[dfC['kode_negara']==kode]['produksi'].tolist()
+        negara = dfJ[dfJ['alpha-3']==kode]['name'].tolist()[0]
+        maks_produksi.append(max(produksi))
+        negara_tiaptahun.append(negara)
+    except:
+        continue
+        
+dic = {'negara':negara_tiaptahun,'produksi_maks':maks_produksi}
+df__ = pd.DataFrame(dic)
+df__ = df__.sort_values('produksi_maks',ascending=False).reset_index()
+
+plt.title('{B} Negara dengan Produksi Terbesar pada Tahun {T}'.format(B=B,T=T))
+plt.bar(df__['negara'][:B],df__['produksi_maks'][:B],width=0.5, bottom=None, align="center",
+            color="cyan", data=None, zorder=3)
+plt.grid(True, color="blue", linewidth="0.7", linestyle="-.", zorder=0)
+plt.xlabel('Negara')
+plt.ylabel('Banyaknya Produksi')
 plt.show()
-rcol.pyplot(plt)
+st.pyplot(plt)
 
 #Bagian C
 
