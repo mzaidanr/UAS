@@ -47,7 +47,7 @@ st.write('Grafik Negara dengan Produksi Terbesar')
 
 st.sidebar.write('Pengaturan Produksi Negara per Tahun')
 T = st.sidebar.number_input("Pilih Tahun produksi", min_value=1971, max_value=2015)
-B = st.sidebar.number_input("Pilih Banyak Negara", min_value=1, max_value=None, value=3)
+B = st.sidebar.slider("Pilih Banyak Negara", min_value=1, max_value=None, value=3)
 
 dfC = dfC[dfC['tahun']==T]
 kode_negara = dfC[dfC['tahun']==T]['kode_negara'].tolist()
@@ -83,7 +83,7 @@ st.pyplot(plt)
 
 st.write('Grafik Negara dengan Produksi Kumulatif Terbesar')
 st.sidebar.write('Pengaturan Produksi Negara per Tahun')
-B = st.sidebar.number_input("Pilih Banyak Negara", min_value=1, max_value=None)
+B = st.sidebar.slider("Pilih Banyak Negara", min_value=1, max_value=None)
 
 list_ngr = []
 kmltf = []
