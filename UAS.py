@@ -47,8 +47,9 @@ print(dfC)
 
 
 #Bagian A
-left_col, right_col = st.columns(2)
+
 st.write("Data Produksi suatu Negara ")
+left_col, right_col = st.columns(2)
 negara = st.sidebar.selectbox('Pilih negara : ',nama_ngr) 
 
 kode = dfJ[dfJ['name']==negara]['alpha-3'].tolist()[0]
