@@ -78,7 +78,7 @@ right_col.pyplot(fig)
 #Bagian B
 lcol, rcol = st.columns(2)
 lcol.write('Negara dengan Produksi Terbesar Tahun')
-st.sidebar.header('Pengaturan Negara dengan Data Produksi dan Kumulatif Terbesar')
+st.sidebar.header('Pengaturan Data Produksi Terbesar suatu Negara')
 tahun = st.sidebar.number_input("Pilih Tahun produksi", min_value=1971, max_value=2015)
 n = st.sidebar.slider("Pilih Banyak Negara", min_value=1, max_value=None)
 
@@ -97,6 +97,9 @@ lc , rc = st.columns(2)
 lc.write('Negara dengan Produksi Kumulatif Terbesar')
 kode_kmltf = []
 kumulatif = []
+
+st.sidebar.header('Pengaturan Data Produksi Terbesar Kumulatif suatu Negara')
+B = st.sidebar.slider("Pilih Banyak Negara", min_value=1, max_value=None)
 
 for i in list (dfC['kode_negara']) :
     if i not in kode_kmltf:
