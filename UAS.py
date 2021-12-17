@@ -11,6 +11,7 @@ ch_ = csvHandler('produksi_minyak_mentah.csv')
 dfC = ch_.dataFrame
 
 #Additional Info
+st.title('Analisis Produksi Minyak Mentah Dunia')
 st.sidebar.write('Creator Info : Muhammad Zaidan R / 12220011')
 image = Image.open('logoitb.png')
 st.sidebar.image(image)
