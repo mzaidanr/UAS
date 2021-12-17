@@ -36,6 +36,9 @@ plt.legend()
 st.pyplot(plt)
 
 #Bagian B
+st.write('Grafik Negara dengan Produksi Terbesar')
+
+
 st.sidebar.write('Pengaturan Produksi Negara per Tahun')
 T = st.sidebar.number_input("Pilih Tahun produksi", min_value=1971, max_value=2015)
 B = st.sidebar.number_input("Pilih Banyak Negara", min_value=1, max_value=None, value=3)
