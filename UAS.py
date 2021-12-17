@@ -65,7 +65,7 @@ df__ = df__.sort_values('produksi_maks',ascending=False).reset_index()
 
 plt.title('{B} Negara dengan Produksi Terbesar pada Tahun {T}'.format(B=B,T=T))
 plt.bar(df__['negara'][:B],df__['produksi_maks'][:B],width=0.5, bottom=None, align="center",
-            color="blue", data=None, zorder=3)
+            color="cyan", data=None, zorder=3)
 plt.grid(True, color="blue", linewidth="0.7", linestyle="-.", zorder=0)
 plt.xlabel('Negara')
 plt.ylabel('Banyaknya Produksi')
