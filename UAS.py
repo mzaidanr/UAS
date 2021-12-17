@@ -246,7 +246,5 @@ lft.write(df_produksi0)
 rght.write('Data Negara dengan Produksi Kumulatif Nol')       
 rght.write(df_produksikmltf)
 
-gif = open('thank you.jfif', 'rb')
-play_gif = gif.read()
-
-st.video(play_gif)
+gif = Image.open('34f1d8973dfbbe0d4442102053c2317a.gif')
+st.image(gif)
