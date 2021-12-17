@@ -1,7 +1,7 @@
 #Import Module
-import json
 import pandas as pd
 import numpy as np
+import json
 import matplotlib.pyplot as plt
 from matplotlib import cm 
 import streamlit as st
@@ -67,7 +67,7 @@ df2['produksi'] = pd.to_numeric(df2['produksi'], errors='coerce')
 left_col.write(df2)
 
 fig, ax = plt.subplots()
-ax.plot(df2['tahun'], df2['produksi'], label = df2['tahun'], color='red')
+ax.plot(df2['tahun'], df2['produksi'], label = df2['tahun'], color='blue')
 ax.set_title("Jumlah Produksi Per Tahun di Negara Pilihan")
 ax.set_xlabel("Tahun", fontsize = 11)
 ax.set_ylabel("Jumlah Produksi", fontsize = 11)
@@ -87,6 +87,7 @@ dfb = dfb.sort_values(by='produksi', ascending = False)
 dfbaru = dfb[:n]
 lcol.write(dfbaru)
 
+plt.title('{B} Negara dengan Produksi Terbesar pada Tahun {T}'.format(B=n,T=tahun))
 dfbaru.plot.bar(x='kode_negara', y='produksi', color='cyan')
 plt.xlabel('Kode Negara')
 plt.ylabel('Jumlah Produksi')
@@ -113,6 +114,8 @@ dk2 = dk.sort_values(by=['kumulatif'], ascending = True)
 dk1 = dk[:n]
 
 lc.write(dk1)
+
+plt.title('{B} Negara dengan Produksi Kumulatif Terbesar pada Tahun {T}'.format(B=n,T=tahun))
 dk1.plot.bar(x='kode_negara', y='kumulatif', color='cyan')
 plt.xlabel('Kode Negara')
 plt.ylabel('Produksi Kumulatif')
