@@ -112,7 +112,7 @@ for i in kode_kmltf :
 dk = pd.DataFrame(list(zip(kode_kmltf,kumulatif)), columns = ['kode_negara','kumulatif'])
 dk = dk.sort_values(by=['kumulatif'], ascending = False)
 dk2 = dk.sort_values(by=['kumulatif'], ascending = True)
-dk1 = dk[:n]
+dk1 = dk[:B]
 
 lc.write(dk1)
 dk1.plot.bar(x='kode_negara', y='kumulatif') 
